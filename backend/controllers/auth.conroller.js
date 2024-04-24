@@ -1,14 +1,35 @@
+import generateTokenAndSetCookie from "../../utils/generateToken.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
 export const login = async (req, res) => {
-    res.send("Login");
+    try {
+        const {username, password} = req.body;
+        const user = await User.findOne({username});
+        const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
+
+        if(!user || !isPasswordCorrect) {
+            return res.status(400).json({erropr: "Invalid username or password"});
+        }
+
+        generateTokenAndSetCookie(user._id, res);
+
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            username: user.username,
+            profilePic: user.profilePic
+        });
+         
+    }catch(error) {
+        console.error(`Error in login controller: ${error.message}`);
+        res.status(500).json({error: "Internal Server Error"});
+    }
 };
 
 export const signup = async (req, res) => {
     try {
         const {fullName, username, password, confirmPassword, gender} = req.body;
-        console.log(req.body)
 
         if(password !== confirmPassword) {
             return res.status(400).json({error: `Password don't match`})
@@ -35,15 +56,25 @@ export const signup = async (req, res) => {
             profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
         })
 
-        await newUser.save();
+        if(newUser) {
+            // Generate JWT token here
+            generateTokenAndSetCookie(newUser._id, res);
 
-        res.status(201).json({
-            _id: newUser._id,
-            fullName: newUser.fullName,
-            username: newUser.username,
-            gender: newUser.gender,
-            profilePic: newUser.profilePic
-        })
+            await newUser.save();
+
+            res.status(201).json({
+                _id: newUser._id,
+                fullName: newUser.fullName,
+                username: newUser.username,
+                gender: newUser.gender,
+                profilePic: newUser.profilePic
+            })
+
+            return;
+        }
+
+        res.status(400).json({ error: "Invalid user data "});
+
     } catch(error) {
         console.error(`Error in signup controller: ${error.message}`);
         res.status(500).json({error: "Internal Server Error"});
@@ -51,8 +82,15 @@ export const signup = async (req, res) => {
 
 };
 
-export const logout = (req, res) => {
-    console.log("Logout");
+export const logout = (_,res) => {
+    try {
+        res.cookie("jwt", "", {
+            maxAge: 0
+        })
 
-    res.send("Logout")
+        res.status(200).json({ message: "Logged out successfully"});
+    } catch (error) {
+        console.error(`Error in logout controller: ${error.message}`);
+        res.status(500).json({error: "Internal Server Error"});
+    }
 };
