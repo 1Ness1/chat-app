@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "dotenv";
 import authRoutes from "./routes/auth.routes.js";
 import messagesRoutes from "./routes/message.routes.js";
+import usersRoutes from "./routes/users.routes.js";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import cookieParser from "cookie-parser";
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messagesRoutes);
+app.use("/api/users", usersRoutes);
 
 // app.get("/", (req, res) => {
 //     root route http://localhost:5000/
