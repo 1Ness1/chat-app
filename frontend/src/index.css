@@ -5,3 +5,21 @@
 body {
     background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), no-repeat url("/background.jpg") center/cover;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #555555;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #121212;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #242424;
+}
