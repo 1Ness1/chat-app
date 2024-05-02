@@ -13,6 +13,8 @@ const useSignup = () => {
             return;
         }
 
+        setLoading(true);
+
         try {
             const result = await fetch("/api/auth/signup", {
                 method: "POST",
