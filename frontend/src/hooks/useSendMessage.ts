@@ -32,4 +32,4 @@ const useSendMessage = () => {
     return {loading, sendMessage};
 }
 
-export default useSendMessage
+export default useSendMessage;

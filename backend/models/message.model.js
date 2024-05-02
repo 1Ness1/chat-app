@@ -18,7 +18,7 @@ const messageSchema = new mongoose.Schema({
         require: true
     }
     // createdAt, updatedAt => message.createdAt : 15:30
-}, {timestamps: true});
+}, { timestamps: true });
 
 const Message = mongoose.model("Message", messageSchema)
 
