@@ -23,8 +23,7 @@ app.use("/api/users", usersRoutes);
 //     res.send("Hello worlds")
 // });
 
-
 app.listen(PORT, () => {
-    connectToMongoDB();
-    console.log(`Server running on this ${PORT}`)
+  connectToMongoDB();
+  console.log(`Server running on this ${PORT}`);
 });

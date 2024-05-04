@@ -3,34 +3,36 @@ import useConversation from "../store/useConversation";
 import toast from "react-hot-toast";
 
 const useGetMessages = () => {
-    const [loading, setLoading] = useState(false);
-    const {messages, setMessages, selectedConversation} = useConversation();
+  const [loading, setLoading] = useState(false);
+  const { messages, setMessages, selectedConversation } = useConversation();
 
-    useEffect(() => {
-        const getMessages = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`/api/messages/${selectedConversation._id}`);
-                const data = await response.json();
+  useEffect(() => {
+    const getMessages = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `/api/messages/${selectedConversation._id}`
+        );
+        const data = await response.json();
 
-                if(data.error) {
-                    throw new Error(data.error);
-                }
-
-                setMessages(data);
-            } catch (error) {
-                toast.error(error.message);
-            } finally {
-                setLoading(false)
-            }
+        if (data.error) {
+          throw new Error(data.error);
         }
 
-        if(selectedConversation?._id) {
-            getMessages();
-        }
-    }, [selectedConversation?._id, setMessages])
+        setMessages(data);
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return {loading, messages};
-}
+    if (selectedConversation?._id) {
+      getMessages();
+    }
+  }, [selectedConversation?._id, setMessages]);
 
-export default useGetMessages
+  return { loading, messages };
+};
+
+export default useGetMessages;
